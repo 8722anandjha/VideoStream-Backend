@@ -1,0 +1,25 @@
+{
+  "name": "backend_mern",
+  "version": "1.0.0",
+  "description": "VideoStream-Backend is a scalable backend service for a video streaming platform, designed to handle video uploads, streaming, user management, and content delivery using modern backend technologies and RESTful APIs.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript.js",
+    "backend",
+    "express.js",
+    "Node.js"
+  ],
+  "author": "Anand Kumar Jha",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}

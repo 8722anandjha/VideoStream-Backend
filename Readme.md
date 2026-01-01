@@ -1,0 +1,1 @@
+VideoStream-Backend is a scalable backend service for a video streaming platform, designed to handle video uploads, streaming, user management, and content delivery using modern backend technologies and RESTful APIs.
