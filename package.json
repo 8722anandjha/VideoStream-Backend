@@ -17,7 +17,8 @@
   "author": "Anand Kumar Jha",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "prettier": "^3.7.4"
   },
   "dependencies": {
     "dotenv": "^17.2.3"
