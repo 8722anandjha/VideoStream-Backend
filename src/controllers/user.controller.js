@@ -243,12 +243,13 @@ export const getCurrentUser = asyncHandler(async(req ,res)=>{
 })
 
 export const updateAccountDetails = asyncHandler(async(req, res)=>{
-    const {fullName,email,} = req.body
-
+    try{
+        const {fullName,email,} = req.body
+    
     if(!fullName || !email){
         throw new ApiError(400,"All fields are required")
     }
-    const user =User.findByIdAndUpdate(
+    const user =await User.findByIdAndUpdate(
         req.user._id,
         {
             $set: {
@@ -264,10 +265,14 @@ export const updateAccountDetails = asyncHandler(async(req, res)=>{
             .json(
                 new ApiResponse(200,user,"Account details updated successfully")
             )
+    } catch(error){
+        throw new ApiError(500,"Error while updating user account details")
+    }
 })
 
 export const upadateUserAvatar= asyncHandler(async(req,res)=>{
-        const avatarLocalPath =req.file?.path
+       try{
+         const avatarLocalPath =req.file?.path
         if(!avatarLocalPath){
             throw new ApiError(400,"Avatar file is missing")
         }
@@ -285,7 +290,7 @@ export const upadateUserAvatar= asyncHandler(async(req,res)=>{
                 }
             },
             {new : true}
-        ).select("-password")
+        ).select("-password -refreshToken")
 
         return res
                .status(200)
@@ -296,13 +301,17 @@ export const upadateUserAvatar= asyncHandler(async(req,res)=>{
                         "Avatar changed successfully"
                     )
                 )
+       }catch(error){
+        throw new ApiError(500,"Error while profile image change")
+       }
 })
 
 export const updateUserCoverImage= asyncHandler(async(req,res)=>{
-        const coverImageLocalPath =req.file?.path
+       try{
+         const coverImageLocalPath =req.file?.path
         
         if(!coverImageLocalPath){
-            throw new ApiError(400,"Avatar file is missing")
+            throw new ApiError(400,"coverImage file is missing")
         }
         const coverImage= await UploadOnCloudinary(coverImageLocalPath)
 
@@ -318,7 +327,7 @@ export const updateUserCoverImage= asyncHandler(async(req,res)=>{
                 }
             },
             {new : true}
-        ).select("-password")
+        ).select("-password -refreshToken")
 
         return res
                 .status(200)
@@ -329,4 +338,7 @@ export const updateUserCoverImage= asyncHandler(async(req,res)=>{
                         "CoverImage changed successfully"
                     )
                 )
+       }catch(error){
+        throw new ApiError(500,"Error while cover image change")
+       }
 })
