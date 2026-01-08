@@ -4,6 +4,7 @@ import {ApiError} from '../utils/ApiError.js'
 import {UploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
+import {v2 as cloudaniry } from "cloudinary"
 
 
 const generateAccessAndRefreshTokens = async(userId)=>{
@@ -276,12 +277,23 @@ export const upadateUserAvatar= asyncHandler(async(req,res)=>{
         if(!avatarLocalPath){
             throw new ApiError(400,"Avatar file is missing")
         }
+        // find old avatar url from db and extract public_id from that url
+            const oldAvatar= await req.user.avatar;
+            const parts= oldAvatar.split("/");
+            const uploadIndx =parts.indexOf("upload");
+            const public_id = parts.slice(uploadIndx +2).join("/").replace(/\.[^/.]+$/,"");
+           
         const avatar= await UploadOnCloudinary(avatarLocalPath)
 
         if(!avatar.url){
             throw new ApiError(400,"Error while uploading on cloudinary")
         }
-
+        // delete old avatar from cloudinary
+        if(avatar.url){
+            await cloudaniry.uploader.destroy(public_id);
+        }
+            
+        
         const user = await User.findByIdAndUpdate(
             req.user?._id,
             {
@@ -313,11 +325,22 @@ export const updateUserCoverImage= asyncHandler(async(req,res)=>{
         if(!coverImageLocalPath){
             throw new ApiError(400,"coverImage file is missing")
         }
+        // find old coverImage url from db and extract public_id from that url
+            const oldCoverImage_url= await req.user.coverImage;
+            const parts= oldCoverImage_url.split("/");
+            const uploadIndx =parts.indexOf("upload");
+            const public_id = parts.slice(uploadIndx +2).join("/").replace(/\.[^/.]+$/,"");
+
         const coverImage= await UploadOnCloudinary(coverImageLocalPath)
 
         if(!coverImage.url){
             throw new ApiError(400,"Error while uploading on cloudinary")
         }
+        // delete old cover image from cloudinary
+        if(coverImage.url){
+            await cloudaniry.uploader.destroy(public_id);
+        }
+            
 
         const user= await User.findByIdAndUpdate(
             req.user?._id,
