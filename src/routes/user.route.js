@@ -1,5 +1,16 @@
 import express from "express";
-import { changeCurrentPassword, getCurrentUser, loginUser, logoutUser, refreshAccessToken, registerUser, upadateUserAvatar, updateAccountDetails, updateUserCoverImage } from "../controllers/user.controller.js";
+import { 
+    changeCurrentPassword,
+    getCurrentUser, 
+    getUserChannelProfile, 
+    getWatchHistory, 
+    loginUser, 
+    logoutUser, 
+    refreshAccessToken, 
+    registerUser, 
+    upadateUserAvatar, 
+    updateAccountDetails, 
+    updateUserCoverImage } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -30,15 +41,18 @@ router.post("/logout",verifyJwt,logoutUser)
 router.post("/refresh-token",refreshAccessToken)
 router.post("/change-password",verifyJwt,changeCurrentPassword)
 router.get("/user-details",verifyJwt,getCurrentUser)
-router.post("/update-account-details",verifyJwt,updateAccountDetails)
-router.post("/update-avatar",
+
+router.patch("/update-account",verifyJwt,updateAccountDetails)
+router.patch("/avatar",
             upload.single('avatar'),
             verifyJwt,
             upadateUserAvatar
             )
-router.post("/update-coverImage",
+router.patch("/coverImage",
     upload.single("coverImage"),
     verifyJwt,
     updateUserCoverImage
 )
+router.get("/c/:username",verifyJwt,getUserChannelProfile)
+router.get("/history",verifyJwt,getWatchHistory)
 export default router
