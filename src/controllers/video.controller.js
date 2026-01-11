@@ -56,4 +56,50 @@ const uploadedVideo = await Video.findById(video?._id).select("-owner");
     .json(new ApiResponse(200, "Video uploaded successfully!", uploadedVideo));
 });
 
+export const getVideoById= asyncHandler(async(req,res)=>{
+      const {videoId} = req.params
+
+      if(!videoId){
+        throw new ApiError(400,"give a valid video id")
+      }
+      const video= await Video.findById({_id: videoId}).select("-isPublished -owner -createdAt -updatedAt -__v")
+      
+      if(!video){
+        throw new ApiError(404,"video not found")
+      }
+      
+      return res.status(200).json(
+        new ApiResponse(200,video,"Video found successfully")
+      )
+})
+
+export const updateVideo = asyncHandler(async(req,res)=>{
+    const {videoId} = req.params
+    const {title, description} = req.body
+    
+    if(!(title || description)){
+      throw new ApiError(400,"description or title field is missing")
+    }
+
+   const updateField={}
+    if(title) updateField.title= title
+    if(description) updateField.description= description
+    
+    const video= await Video.findByIdAndUpdate(
+      {
+        _id:videoId
+      },
+      {
+        $set: updateField
+      },
+      {new:true}
+    ).select("-owner -isPublished")
+    console.log(video)
+
+    res
+    .status(200)
+    .json(
+      new ApiResponse(200,video, "video details updated sucessfully")
+    )
+})
 

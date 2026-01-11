@@ -347,7 +347,7 @@ export const updateUserCoverImage= asyncHandler(async(req,res)=>{
             req.user?._id,
             {
                 $set:{
-                    avatar:coverImage.url
+                    coverImage:coverImage.url
                 }
             },
             {new : true}
