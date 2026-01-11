@@ -1,4 +1,4 @@
-import {v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import { ApiError } from "./ApiError.js";
 
@@ -10,15 +10,14 @@ cloudinary.config({
 
 const UploadOnCloudinary = async (file) => {
   try {
-    
     const is_video = file.mimetype.startsWith("video");
     // upload the file on cloudinary
     const response = await cloudinary.uploader.upload(file.path, {
-          resource_type: is_video? "video":"image",
-          folder: is_video?"Video":"Image",
-        })
-      
-    console.log("file is uploaded on cloudinary",response)
+      resource_type: is_video ? "video" : "image",
+      folder: is_video ? "Video" : "Image",
+    });
+
+    console.log("file is uploaded on cloudinary", response);
 
     if (fs.existsSync(file.path)) {
       fs.unlinkSync(file.path);
@@ -36,4 +35,16 @@ const UploadOnCloudinary = async (file) => {
   }
 };
 
-export { UploadOnCloudinary };
+const deleteFromCloudinary = async (publid_id) => {
+  try {
+    const result = await cloudinary.uploader.destroy(publid_id);
+
+    return result;
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "something went while deleting the file from cloudinary"
+    );
+  }
+};
+export { UploadOnCloudinary, deleteFromCloudinary };
