@@ -54,19 +54,19 @@ export const registerUser = asyncHandler( async (req, res)=>{
         throw new ApiError(409,"user already exist")
     } 
 
-    const avatarLocalPath = req.files?.avatar[0]?.path;
+    const avatarLocalFile = req.files?.avatar[0];
     // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
-    let coverImageLocalPath;
+    let coverImageLocalFile;
     if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
-        coverImageLocalPath= req.files.coverImage[0].path;
+        coverImageLocalFile= req.files.coverImage[0];
     }
 
-    if(!avatarLocalPath){
+    if(!avatarLocalFile){
         throw new ApiError(400,"Avatar file is required")
     }
-    const avatar = await UploadOnCloudinary(avatarLocalPath)
-    const coverImage = await UploadOnCloudinary(coverImageLocalPath)
+    const avatar = await UploadOnCloudinary(avatarLocalFile)
+    const coverImage = await UploadOnCloudinary(coverImageLocalFile)
    
     if(!avatar){
         throw new ApiError(400,"Avatar file is not uploaded on cloudinary")
@@ -274,7 +274,7 @@ export const updateAccountDetails = asyncHandler(async(req, res)=>{
 
 export const upadateUserAvatar= asyncHandler(async(req,res)=>{
        try{
-         const avatarLocalPath =req.file?.path
+         const avatarLocalPath =req.file
         if(!avatarLocalPath){
             throw new ApiError(400,"Avatar file is missing")
         }
@@ -321,7 +321,7 @@ export const upadateUserAvatar= asyncHandler(async(req,res)=>{
 
 export const updateUserCoverImage= asyncHandler(async(req,res)=>{
        try{
-         const coverImageLocalPath =req.file?.path
+         const coverImageLocalPath =req.file
         
         if(!coverImageLocalPath){
             throw new ApiError(400,"coverImage file is missing")

@@ -25,16 +25,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
     throw new ApiError(400, "Video file is missing!");
   if (!thumbnailFile)
     throw new ApiError(400, "Thumbnail file is missing!");
-console.log({
-  videoFile,
-  thumbnailFile
-})
+
   const videoFileResponse = await UploadOnCloudinary(videoFile);
   const thumbnailFileResponse = await UploadOnCloudinary(thumbnailFile);
-console.log({
-  videoFileResponse,
-  thumbnailFileResponse
-})
+
   if (!videoFileResponse)
     throw new ApiError(500, "Error while uploading video on cloudinary!");
 
@@ -61,3 +55,5 @@ const uploadedVideo = await Video.findById(video?._id).select("-owner");
     .status(200)
     .json(new ApiResponse(200, "Video uploaded successfully!", uploadedVideo));
 });
+
+
