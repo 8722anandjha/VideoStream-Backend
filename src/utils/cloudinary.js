@@ -17,8 +17,7 @@ const UploadOnCloudinary = async (file) => {
       folder: is_video ? "Video" : "Image",
     });
 
-    console.log("file is uploaded on cloudinary", response);
-
+    
     if (fs.existsSync(file.path)) {
       fs.unlinkSync(file.path);
     }

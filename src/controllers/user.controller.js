@@ -1,7 +1,7 @@
 import {User}  from '../models/user.model.js'
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {ApiError} from '../utils/ApiError.js'
-import {UploadOnCloudinary} from "../utils/cloudinary.js"
+import {deleteFromCloudinary, UploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 import {v2 as cloudaniry } from "cloudinary"
@@ -291,7 +291,7 @@ export const upadateUserAvatar= asyncHandler(async(req,res)=>{
         }
         // delete old avatar from cloudinary
         if(avatar.url){
-            await cloudaniry.uploader.destroy(public_id);
+            await deleteFromCloudinary(public_id);
         }
             
         
@@ -339,10 +339,9 @@ export const updateUserCoverImage= asyncHandler(async(req,res)=>{
         }
         // delete old cover image from cloudinary
         if(coverImage.url){
-            await cloudaniry.uploader.destroy(public_id);
+            await deleteFromCloudinary(public_id);
         }
             
-
         const user= await User.findByIdAndUpdate(
             req.user?._id,
             {

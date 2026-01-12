@@ -6,6 +6,8 @@ import {
   UploadOnCloudinary,
 } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { isValidObjectId } from "mongoose";
+
 
 export const publishAVideo = asyncHandler(async (req, res) => {
   // Ask title and description and check if not empty
@@ -129,6 +131,10 @@ export const deleteVideo = asyncHandler(async (req, res) => {
 
 export const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
+
+  if(!videoId && !isValidObjectId(videoId)){
+          throw new ApiError(400, "videoId is not valid")
+  }
   const video = await Video.findById({ _id: videoId });
   if (!video) {
     throw new ApiError(404, "Video not found");
