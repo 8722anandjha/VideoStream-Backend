@@ -110,7 +110,7 @@ export const loginUser= asyncHandler(async(req , res)=>{
         $or: [{email},{username}]
     })
     if(!existingUser ){
-        throw new ApiError(404,"user noed not exist")
+        throw new ApiError(404,"user does not exist")
     }
     const isPasswordValid = await existingUser.isPasswordCorrect(password);
     
