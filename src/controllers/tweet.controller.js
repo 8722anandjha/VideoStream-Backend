@@ -49,7 +49,7 @@ export const updateTweet = asyncHandler(async (req, res) => {
     throw new ApiError(400, "content is missing");
   }
 
-  const updadetTweet = await Tweet.findByIdAndUpdate(
+  const updatedTweet = await Tweet.findByIdAndUpdate(
     { _id: tweetId },
     {
       $set: {
@@ -65,7 +65,7 @@ export const updateTweet = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, tweet, "tweet updated successfully"));
+    .json(new ApiResponse(200, updatedTweet, "tweet updated successfully"));
 });
 
 export const deleteTweet = asyncHandler(async (req, res) => {
@@ -82,6 +82,6 @@ export const deleteTweet = asyncHandler(async (req, res) => {
   }
   return res
     .status(200)
-    .json(new ApiResponse(200, deletedTweet, "Tweet deleted successfully"));
+    .json(new ApiResponse(200, {}, "Tweet deleted successfully"));
 });
 
