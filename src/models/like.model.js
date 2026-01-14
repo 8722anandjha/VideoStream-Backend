@@ -10,7 +10,7 @@ const likeSchema= new Schema({
         ref: "Comment"
     },
     tweet:{
-        types: Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref:"Tweet"
     },
     likedBy:{
@@ -21,4 +21,4 @@ const likeSchema= new Schema({
     timestamps: true
 })
 
-export const Like = mongoose.model.apply("Like",likeSchema)
+export const Like = mongoose.model("Like",likeSchema)
