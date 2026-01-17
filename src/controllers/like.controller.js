@@ -266,4 +266,62 @@ export const getLikedComments = asyncHandler(async (req, res) => {
     );
 });
 
+export const getLikedTweets = asyncHandler(async (req, res) => {
+  
 
+  const likedTweets = await Like.aggregate([
+    {
+      $match: {
+        likedBy: new mongoose.Types.ObjectId(req.user._id),
+      },
+    },
+    {
+    $match: {
+      tweet: { $ne: null },
+    },
+  },
+    {
+      $lookup: {
+        from: "tweets",
+        localField: "tweet",
+        foreignField: "_id",
+        as: "tweet",
+      },
+    },
+    {
+      $unwind: "$tweet",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "tweet.owner",
+        foreignField: "_id",
+        as: "owner",
+      },
+    },
+    {
+      $unwind: {
+        path: "$owner",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        _id: "$tweet._id",
+        content: "$tweet.content",
+        owner: "$owner.username",
+        createdAt:"$tweet.createdAt",
+      },
+    },
+  ]);
+
+  if (!likedTweets) {
+    throw new ApiError(400, "Not found any liked comment");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, likedTweets, "liked comments fetched successfully")
+    );
+});
