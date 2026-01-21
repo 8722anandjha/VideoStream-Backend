@@ -9,7 +9,6 @@ import { Tweet } from "../models/tweet.model.js";
 
 export const toggleVideoLike = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  console.log(videoId);
   if (!videoId || !isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid videoId");
   }

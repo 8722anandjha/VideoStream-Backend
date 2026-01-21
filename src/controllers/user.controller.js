@@ -38,8 +38,6 @@ export const registerUser = asyncHandler( async (req, res)=>{
     // check for user creation
     // return res
     const  {username , email, password, fullName} =req.body
-        // console.log(req.body)
-        
     if(
         [fullName,email,username,password].some((field)=>
         field?.trim() === "")
@@ -56,7 +54,7 @@ export const registerUser = asyncHandler( async (req, res)=>{
 
     const avatarLocalFile = req.files?.avatar[0];
     // const coverImageLocalPath = req.files?.coverImage[0]?.path;
-
+    
     let coverImageLocalFile;
     if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
         coverImageLocalFile= req.files.coverImage[0];
@@ -234,7 +232,6 @@ export const changeCurrentPassword= asyncHandler(async(req ,res)=>{
 })
 
 export const getCurrentUser = asyncHandler(async(req ,res)=>{
-    console.log(req.user)
     return res
     .status(200)
     .json(

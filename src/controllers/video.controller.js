@@ -105,7 +105,7 @@ export const updateVideoDetails = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).select("-owner -isPublished");
-  console.log(updatedVideo);
+
 
   res
     .status(200)

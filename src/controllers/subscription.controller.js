@@ -112,11 +112,14 @@ export const getSubscribedChannels = asyncHandler(async (req, res) => {
       $unwind: "$channel",
     },
   ]);
-
   if (!subscribedChannels || !Array.isArray(subscribedChannels))
     throw new ApiError(500, "Error while fetching subscribed channels list!");
 
+  if (subscribedChannels.length ===0){
+    return res.status(200).json(new ApiResponse(500,"You have not subscribed any channel Yet!")) 
+  }
+
   return res
     .status(200)
-    .json(new ApiResponse(200, "Subscribed channels fetched successfully!", subscribedChannels));
+    .json(new ApiResponse(200, subscribedChannels,"Subscribed channels fetched successfully!"));
 });
