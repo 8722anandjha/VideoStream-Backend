@@ -165,3 +165,58 @@ export const addVideoToPlaylist = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, playlist, "video added to the playlist"));
 });
+
+export const updatePlaylist = asyncHandler(async (req, res) => {
+    const {playlistId} = req.params
+    const {name, description} = req.body
+    console.log(req.body)
+    if(name.trim() === "" || description.trim() === ""){
+        throw new ApiError(400,"Name and  description both are required!")
+    }
+
+    const playlist= await Playlist.findByIdAndUpdate(
+        {_id:playlistId, owner: req.user_id},
+        {
+            name,
+            description
+        },
+        {new: true}
+    )
+    if(!playlist){
+        throw new ApiError(500,"Error while updating playlist!")
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200,playlist,"playlist updated successfully")
+        )
+})
+
+export const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
+    const {playlistId, videoId} = req.params
+    
+    if(!videoId || !isValidObjectId(videoId)){
+        throw new ApiError(400,"Video Id is required!")
+    }
+
+    const playlist= await Playlist.findByIdAndUpdate(
+        {
+            _id: playlistId,
+            owner:req.user._id,
+            videos:{ $eq: videoId}
+        },
+        {
+            $pull: {videos: videoId}
+        },
+        {new:true}
+    )
+    if(!playlist){
+        throw new ApiError(500,"video foes not exist in playlist")
+    }
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200,playlist,"video removed successfully")
+        )
+})
